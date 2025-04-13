@@ -2,9 +2,11 @@ import "./index.css";
 import { Toaster, toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Spinner from "../../Components/Spinner";
 const Login = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const [logginIn, setLogginIn] = useState(false);
   const [userDetails, setUserDetails] = useState({
     username: "",
     password: "",
@@ -12,6 +14,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLogginIn(true);
       const url = "https://ecommerce-backend-g96o.onrender.com/auth/login";
       const body = userDetails;
       let response = await fetch(url, {
@@ -31,9 +34,11 @@ const Login = () => {
       } else {
         toast.error(data.error);
       }
+      setLogginIn(false);
     } catch (err) {
       console.log(err, "error");
       toast.error("Something went wrong, Please try again.");
+      setLogginIn(false);
     }
   };
 
@@ -130,7 +135,7 @@ const Login = () => {
                 type="submit"
                 className="cursor-pointer flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Log in
+                {logginIn ? <Spinner /> : "Log in"}
               </button>
             </div>
           </form>

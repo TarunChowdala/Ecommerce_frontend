@@ -3,10 +3,12 @@ import "./index.css";
 
 import { Toaster, toast } from "sonner";
 import { useEffect, useState } from "react";
+import Spinner from "../../Components/Spinner";
 
 const Signup = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const [isSignIn, setIssignIn] = useState(false);
   const [userDetails, setUserDetails] = useState({
     username: "",
     password: "",
@@ -14,6 +16,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setIssignIn(true);
       const url = "https://ecommerce-backend-g96o.onrender.com/auth/signup";
       const body = userDetails;
       let response = await fetch(url, {
@@ -33,9 +36,11 @@ const Signup = () => {
         console.log(data, "===");
         toast.error(data.error);
       }
+      setIssignIn(false);
     } catch (err) {
       console.log(err, "error");
       toast.error("Something went wrong, Please try again.");
+      setIssignIn(false);
     }
   };
 
@@ -132,7 +137,7 @@ const Signup = () => {
                 type="submit"
                 className="cursor-pointer flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign up
+                {isSignIn ? <Spinner /> : "Sign up"}
               </button>
             </div>
           </form>

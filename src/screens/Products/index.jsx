@@ -85,7 +85,7 @@ const Products = () => {
         description: selectedProduct.description,
         imageUrl: selectedProduct.image,
       };
-      const url = "http://localhost:5000/cart";
+      const url = "https://ecommerce-backend-g96o.onrender.com/cart";
       let response = await fetch(url, {
         method: "POST",
         headers: {
