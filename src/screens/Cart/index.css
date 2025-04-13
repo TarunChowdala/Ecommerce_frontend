@@ -1,0 +1,24 @@
+.cart-list {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  gap: 20px;
+}
+.cart-list-items {
+  width: 50%;
+}
+.order-details {
+  width: 50%;
+}
+@media (max-width: 767px) {
+  .cart-list-items {
+    width: 100%;
+  }
+  .cart-list {
+    flex-direction: column;
+  }
+  .order-details {
+    margin-top: 50px;
+    width: 100%;
+  }
+}
