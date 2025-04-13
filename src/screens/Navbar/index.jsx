@@ -14,6 +14,10 @@ const Navbar = () => {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token"), navigate("/login");
+  };
+
   return (
     <header className="bg-white navbar-main">
       <nav
@@ -178,6 +182,7 @@ const Navbar = () => {
               </div>
               <div className="py-6">
                 <Link
+                  onClick={handleLogout}
                   to="/login"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
