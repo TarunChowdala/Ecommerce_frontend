@@ -14,10 +14,6 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 const Home = () => {
   const [open, setOpen] = useState(false);
 
@@ -200,47 +196,72 @@ const Home = () => {
         {promoSection()}
 
         <div className="bg-white">
-          <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-8">
               Featured Products
             </h2>
-
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
               {products &&
                 products
                   .filter((item, index) => index < 8 && item)
                   .map((product) => (
                     <div
                       key={product.id}
-                      className="group relative"
+                      className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow cursor-pointer flex flex-col border border-gray-100 group"
                       onClick={() => {
                         setSelectedProduct(product);
                         setOpen(true);
                       }}
                     >
-                      <img
-                        alt={product.name}
-                        src={product.image}
-                        className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
-                      />
-                      <div className="mt-4 flex justify-between">
-                        <div>
-                          <h3 className="text-sm text-gray-700">
-                            <a href={product.href}>
-                              <span
-                                aria-hidden="true"
-                                className="absolute inset-0"
-                              />
-                              {product.name}
-                            </a>
-                          </h3>
-                          <p className="mt-1 text-sm text-gray-500">
-                            {product.color}
-                          </p>
+                      <div className="relative">
+                        <img
+                          alt={product.name}
+                          src={product.image}
+                          className="aspect-square w-full rounded-t-xl object-cover group-hover:opacity-90"
+                        />
+                        {product.discountPercentage && (
+                          <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                            {product.discountPercentage}% OFF
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex-1 flex flex-col p-4">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1 truncate">
+                          {product.name}
+                        </h3>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xl font-bold text-indigo-600">
+                            ₹{product.price}
+                          </span>
                         </div>
-                        <p className="text-sm font-medium text-gray-900">
-                          {product.price}
-                        </p>
+                        <div className="flex items-center gap-1 mb-2">
+                          <span className="text-yellow-500 flex items-center">
+                            <StarIcon className="size-5" aria-hidden="true" />
+                            <span className="ml-1 text-base font-medium text-gray-700">
+                              {product.rating?.rate || 0}
+                            </span>
+                          </span>
+                          <span className="ml-2 text-xs text-gray-500">
+                            ({product.rating?.count || 0} reviews)
+                          </span>
+                        </div>
+                        <div className="text-sm text-gray-500 mb-2">
+                          Brand:{" "}
+                          <span className="font-medium text-gray-700">
+                            {product.brand}
+                          </span>
+                        </div>
+                        <div className="flex-1" />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProduct(product);
+                            setOpen(true);
+                          }}
+                          className="mt-2 w-full rounded-md bg-indigo-600 px-4 py-2 text-base font-semibold text-white hover:bg-indigo-700 transition"
+                        >
+                          View Details
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -249,120 +270,74 @@ const Home = () => {
         </div>
       </div>
       <Toaster richColors position="top-right" />
-      <Dialog open={open} onClose={setOpen} className="relative z-10">
-        <DialogBackdrop
-          transition
-          className="fixed inset-0 hidden bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in md:block"
-        />
-
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-stretch justify-center text-center md:items-center md:px-2 lg:px-4">
-            <DialogPanel
-              transition
-              className="flex w-full transform text-left text-base transition data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in md:my-8 md:max-w-2xl md:px-4 data-closed:md:translate-y-0 data-closed:md:scale-95 lg:max-w-4xl"
+      <Dialog open={open} onClose={setOpen} className="relative z-50">
+        <DialogBackdrop className="fixed inset-0 bg-black/40" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <DialogPanel className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8 relative flex flex-col md:flex-row gap-8">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
             >
-              <div className="relative flex w-full items-center overflow-hidden bg-white px-4 pt-14 pb-8 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="absolute top-4 right-4 text-gray-400 hover:text-gray-500 sm:top-8 sm:right-6 md:top-6 md:right-6 lg:top-8 lg:right-8"
-                >
-                  <span className="sr-only">Close</span>
-                  <XMarkIcon aria-hidden="true" className="size-6" />
-                </button>
-
-                <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
-                  <img
-                    alt={selectedProduct.name || "image"}
-                    src={selectedProduct.image || ""}
-                    className="aspect-2/3 w-full rounded-lg bg-gray-100 object-cover sm:col-span-4 lg:col-span-5"
+              <span className="sr-only">Close</span>
+              <XMarkIcon aria-hidden="true" className="size-7" />
+            </button>
+            <img
+              alt={selectedProduct.name || "image"}
+              src={selectedProduct.image || ""}
+              className="w-full md:w-1/2 rounded-xl object-cover bg-gray-100 aspect-square"
+            />
+            <div className="flex-1 flex flex-col justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  {selectedProduct.name}
+                </h2>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xl font-bold text-indigo-600">
+                    ₹{selectedProduct.price}
+                  </span>
+                  {selectedProduct.discountPercentage && (
+                    <span className="ml-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                      {selectedProduct.discountPercentage}% OFF
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-1 mb-2">
+                  <StarIcon
+                    className="size-5 text-yellow-500"
+                    aria-hidden="true"
                   />
-                  <div
-                    className="sm:col-span-8 lg:col-span-7 flex flex-col"
-                    style={{ height: "100%" }}
-                  >
-                    <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">
-                      {selectedProduct.name}
-                    </h2>
-
-                    <section
-                      aria-labelledby="information-heading"
-                      className="mt-2"
-                    >
-                      <h3 id="information-heading" className="sr-only">
-                        Product information
-                      </h3>
-
-                      <p className="text-2xl text-gray-900">
-                        {selectedProduct.price}
-                      </p>
-
-                      {/* Reviews */}
-                      <div className="mt-6">
-                        <h4 className="sr-only">Reviews</h4>
-                        <div className="flex items-center">
-                          <div className="flex items-center">
-                            <p>{selectedProduct.rating.rate}</p>
-                            {[0, 1, 2, 3, 4].map((rating) => (
-                              <StarIcon
-                                key={rating}
-                                aria-hidden="true"
-                                className={classNames(
-                                  selectedProduct.rating > rating
-                                    ? "text-gray-900"
-                                    : "text-gray-200",
-                                  "size-5 shrink-0"
-                                )}
-                              />
-                            ))}
-                          </div>
-                          <p className="sr-only">
-                            {selectedProduct.rating.rate} out of 5 stars
-                          </p>
-                          <span className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                            {selectedProduct.rating.count} reviews
-                          </span>
-                        </div>
-                      </div>
-                      <h2 className="mt-2 mb-2">
-                        {selectedProduct.description}
-                      </h2>
-                      <h2 className="text-sm font-medium">
-                        In Stock :
-                        <span className="text-sm">
-                          {" "}
-                          {selectedProduct.inStock}
-                        </span>
-                      </h2>
-                      <h2 className="text-sm font-medium mt-2">
-                        Brand :{" "}
-                        <span className="text-sm text-muted">
-                          {" "}
-                          {selectedProduct.brand}
-                        </span>
-                      </h2>
-                    </section>
-
-                    <section
-                      aria-labelledby="options-heading"
-                      className="mt-auto"
-                    >
-                      <h3 id="options-heading" className="sr-only">
-                        Product options
-                      </h3>
-
-                      <button
-                        onClick={() => addtoCart()}
-                        className="mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden"
-                      >
-                        Add to bag
-                      </button>
-                    </section>
-                  </div>
+                  <span className="text-base font-medium text-gray-700">
+                    {selectedProduct.rating?.rate || 0}
+                  </span>
+                  <span className="ml-2 text-xs text-gray-500">
+                    ({selectedProduct.rating?.count || 0} reviews)
+                  </span>
+                </div>
+                <div className="text-sm text-gray-500 mb-2">
+                  Brand:{" "}
+                  <span className="font-medium text-gray-700">
+                    {selectedProduct.brand}
+                  </span>
+                </div>
+                <div className="text-sm text-gray-500 mb-2">
+                  In Stock:{" "}
+                  <span className="font-medium text-green-600">
+                    {selectedProduct.inStock}
+                  </span>
+                </div>
+                <div className="text-base text-gray-700 mb-4">
+                  {selectedProduct.description}
                 </div>
               </div>
-            </DialogPanel>
-          </div>
+              <button
+                onClick={addtoCart}
+                className="mt-4 w-full rounded-md bg-indigo-600 px-6 py-3 text-lg font-semibold text-white hover:bg-indigo-700 transition"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </DialogPanel>
         </div>
       </Dialog>
     </div>

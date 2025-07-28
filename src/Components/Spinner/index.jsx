@@ -1,7 +1,17 @@
+import "./index.css";
 
-import "./index.css"
-const Spinner = () => {
-    return <div className="black-spinner"></div>;
-  };
-  
-  export default Spinner;
+const Spinner = ({ color = "white", size = 20 }) => {
+  return (
+    <div
+      className="black-spinner"
+      style={{
+        borderTopColor: color,
+        width: size,
+        height: size,
+        borderWidth: size / 7,
+      }}
+    ></div>
+  );
+};
+
+export default Spinner;
