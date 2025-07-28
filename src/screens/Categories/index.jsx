@@ -1,6 +1,7 @@
 import "./index.css";
 import Navbar from "../Navbar";
 import { useEffect, useState } from "react";
+import Spinner from "../../Components/Spinner";
 import { useNavigate } from "react-router-dom";
 
 // import { Toaster, toast } from "sonner";
@@ -36,9 +37,11 @@ const categoryMap = {
 const Categories = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
 
   const fetchCategories = async () => {
+    setLoading(true);
     try {
       const url =
         "https://ecommerce-backend-g96o.onrender.com/products/categories";
@@ -53,7 +56,6 @@ const Categories = () => {
         let categoryData = [];
         data.forEach((each) => {
           const mapped = categoryMap[each];
-
           const eachCategory = {
             category: each,
             imgUrl: mapped ? mapped.imgUrl : "https://default.image.url",
@@ -61,15 +63,16 @@ const Categories = () => {
               ? mapped.description
               : "No description available.",
           };
-
           categoryData.push(eachCategory);
         });
         setCategories(categoryData);
       } else {
         console.log(data, "data");
       }
+      setLoading(false);
     } catch (error) {
       console.log(error, "error");
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -77,48 +80,59 @@ const Categories = () => {
   }, []);
 
   return (
-    <div className="layout-main">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="layout-inner">
-        <div className="bg-white">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
-              <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
-
-              <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:space-y-0 lg:gap-x-6">
-                {categories.map((each, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="group relative mb-2 cursor-pointer"
-                      onClick={() =>
-                        navigate(
-                          `/products?category=${encodeURIComponent(
-                            each.category
-                          )}`
-                        )
-                      }
-                    >
-                      <h2 className="mt-6 text-lg font-semibold  text-gray-900">
-                        {each.category}
-                      </h2>
-                      <p className="text-base  text-gray-500">
-                        {each.description}
-                      </p>
-                      <img
-                        alt={each.name}
-                        src={each.imgUrl}
-                        className="mt-2 w-full rounded-lg bg-white object-cover group-hover:opacity-75 max-sm:h-80 sm:aspect-2/1 lg:aspect-square"
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8">
+          Shop by Category
+        </h2>
+        {loading ? (
+          <div className="flex justify-center items-center py-16">
+            <Spinner color="blue" size={40} />
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {categories.map((each, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow cursor-pointer flex flex-col border border-gray-100 group overflow-hidden"
+                onClick={() =>
+                  navigate(
+                    `/products?category=${encodeURIComponent(each.category)}`
+                  )
+                }
+              >
+                <img
+                  alt={each.category}
+                  src={each.imgUrl}
+                  className="w-full h-56 object-cover group-hover:opacity-90"
+                />
+                <div className="p-6 flex-1 flex flex-col">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {each.category}
+                  </h3>
+                  <p className="text-base text-gray-500 mb-4">
+                    {each.description}
+                  </p>
+                  <button
+                    className="mt-auto w-full rounded-md bg-indigo-600 px-4 py-2 text-base font-semibold text-white hover:bg-indigo-700 transition"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(
+                        `/products?category=${encodeURIComponent(
+                          each.category
+                        )}`
+                      );
+                    }}
+                  >
+                    View Products
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-      {/* <Toaster richColors position="top-right" /> */}
     </div>
   );
 };
