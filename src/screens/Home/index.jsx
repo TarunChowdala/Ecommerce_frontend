@@ -258,7 +258,7 @@ const Home = () => {
                             setSelectedProduct(product);
                             setOpen(true);
                           }}
-                          className="mt-2 w-full rounded-md bg-indigo-600 px-4 py-2 text-base font-semibold text-white hover:bg-indigo-700 transition"
+                          className="mt-2 w-full rounded-md bg-indigo-600 px-4 py-2 text-base font-semibold text-white hover:bg-indigo-700 transition cursor-pointer"
                         >
                           View Details
                         </button>
@@ -270,7 +270,11 @@ const Home = () => {
         </div>
       </div>
       <Toaster richColors position="top-right" />
-      <Dialog open={open} onClose={setOpen} className="relative z-50">
+      <Dialog
+        open={open}
+        onClose={setOpen}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm transition-opacity duration-300 ease-in-out"
+      >
         <DialogBackdrop className="fixed inset-0 bg-black/40" />
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <DialogPanel className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8 relative flex flex-col md:flex-row gap-8">
