@@ -138,7 +138,7 @@ const Cart = () => {
             <p className="text-lg text-gray-500">No cart items here</p>
             <Button
               onClick={() => navigate("/products")}
-              className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition text-base font-semibold"
+              className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition text-base font-semibold cursor-pointer"
             >
               Find Products
             </Button>
@@ -171,7 +171,7 @@ const Cart = () => {
                         <button
                           type="button"
                           onClick={() => removeCartItem(each)}
-                          className="font-medium text-red-600 hover:text-red-800 text-sm"
+                          className="font-medium text-red-600 hover:text-red-800 text-sm cursor-pointer"
                         >
                           Remove
                         </button>
@@ -198,10 +198,10 @@ const Cart = () => {
               </div>
               <button
                 onClick={handleCheckout}
-                className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition text-lg font-semibold shadow"
+                className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition text-lg font-semibold shadow cursor-pointer"
                 disabled={cartItems.length === 0}
               >
-                Checkout now
+                Checkout Now
               </button>
             </div>
           </div>
